@@ -1,0 +1,53 @@
+---
+title: "MSDS 597 Class 8 Joint Project"
+author: "Steve Buyske et al."
+date: "11/9/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+```{r functions, echo = FALSE}
+clean_who_number_spaces <- function(x, sep = ""){
+  ## Change formating of numbers from xxx xxx to xxx,xxx
+  library(stringr)
+  library(dplyr)
+  clean_triplet_pair <- 
+    function(x) str_replace(x, "([0-9]{1,3}) ([0-9]{3})", paste0("\\1", sep, "\\2"))
+  number_of_iterations <- max(map_int(x, ~ str_count(., " ")), na.rm = TRUE)
+  for (i in 1:number_of_iterations){
+    x <- clean_triplet_pair(x)
+  }
+  x
+}
+
+```
+---
+
+As a starting point, we have just the cleaned maternal mortality dataframe. (Feel free to use my cleaning code as the basis for your own functions.)
+
+```{r maternal_mortality, echo = FALSE, message = FALSE}
+
+maternal_mortality_raw <- read_csv("data/xmart.csv")
+
+maternal_mortality <- maternal_mortality_raw
+
+colnames(maternal_mortality)[3:4] <- c("mortality.rate", "attended.births")
+maternal_mortality$mortality.rate <- clean_who_number_spaces(maternal_mortality$mortality.rate)
+
+maternal_mortality <- separate(maternal_mortality, mortality.rate, into = c("mortality.rate", "lower.upper"), sep = "\\[", fill = "right")
+maternal_mortality$lower.upper <- str_replace_all(maternal_mortality$lower.upper, "\\]", "")
+maternal_mortality <- separate(maternal_mortality, lower.upper, into = c("lower.bound", "upper.bound"), sep = "\\-", fill = "right")
+
+maternal_mortality$mortality.rate <- as.integer(maternal_mortality$mortality.rate)
+maternal_mortality$lower.bound <- as.integer(maternal_mortality$lower.bound)
+maternal_mortality$upper.bound <- as.integer(maternal_mortality$upper.bound)
+
+maternal_mortality$Year <- as.integer(str_sub(maternal_mortality$Year, 1, 4))
+head(maternal_mortality)
+```
+
