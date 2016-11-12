@@ -60,33 +60,9 @@ viol_hom <- read_csv("data/VIOLENCE_HOMICIDERATE.csv")
 colnames(viol_hom)[1:3] <- c("Country", "Num_hom", "Hom_rate")
 viol_hom <- viol_hom[-1, ]
 
-separate_bounds <- function(x) {
-  x <- separate(x, Num_hom, into = c("num_hom", "bounds"), sep = "\\[",fill = "right")
-  x$bounds <- str_replace_all(x$bounds, "\\]", "")
-  x <- separate(x, bounds, into = c("num_lower_bound", "num_upper_bound"), sep = "\\-",fill = "right")
-  x <- separate(x, Hom_rate, into = c("hom_rate", "bounds"), sep = "\\[",fill = "right")
-  x$bounds <- str_replace_all(x$bounds, "\\]", "")
-  x <- separate(x, bounds, into = c("rate_lower_bound", "rate_upper_bound"), sep = "\\-",fill = "right")
-  
-  x
-}
+source("Wood_functions.R")
 
-remove_spaces <- function(x) {
-num_col <- ncol(x)
-  for (i in 1:num_col){
-    x[[i]] <-str_replace_all(x[[i]], " ", "")
-  }
-x
-}
+fix_who_column(viol_hom$Num_hom)
+fix_who_column(viol_hom$Hom_rate)
 
-fix_who_column <- function(x) {
-y <- remove_spaces(x)
-y <- separate_bounds(y)
-
-y 
-}
-
-viol_hom <- fix_who_column(viol_hom)
-
-glimpse(viol_hom)
 ```
