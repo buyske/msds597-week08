@@ -51,3 +51,13 @@ maternal_mortality$Year <- as.integer(str_sub(maternal_mortality$Year, 1, 4))
 head(maternal_mortality)
 ```
 
+This part is done by Zhenzhen Ge on WHO data "15-19 years old total alcohol per capita consumption by country"
+
+```{r Youth and alcohol,echo=FALSE,message = FALSE}
+source("ZhenzhenGe-function.R")
+alcohol_raw <- read_csv("data/alcohol.csv",skip = 1)
+x <- alcohol_raw$`Both sexes`
+fix_who_column(x)
+```
+
+
