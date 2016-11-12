@@ -51,3 +51,11 @@ maternal_mortality$Year <- as.integer(str_sub(maternal_mortality$Year, 1, 4))
 head(maternal_mortality)
 ```
 
+
+Subhasree Samanta -- Road Safety > Mortality > Road traffic deaths, Data by country
+
+```{r samanta, echo = FALSE, message = FALSE}
+source("samanta-functions.R")
+road_deaths <- read_csv("data/roadDeaths.csv", col_names = c("country","num.deaths", "death.rate"), skip = 2)
+fix_who_column(road_deaths$num.deaths)
+```
