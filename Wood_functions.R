@@ -7,11 +7,11 @@ colnames(mat_mor)[3:4] <- c("mortality.rate", "attended.births")
 
 remove_spaces <- function(x) {
   x <-as.data.frame(x, stringsAsFactors = FALSE)
-num_row <- nrow(x)
-  for (i in 1:num_row){
+  num_row <- nrow(x)
+  for (i in 1:num_row) {
     x[i,] <-str_replace_all(x[i,], " ", "")
   }
-x
+  x
 }
 
 
@@ -25,11 +25,8 @@ separate_bounds <- function(x) {
 
 
 fix_who_column <- function(x) {
-y <- remove_spaces(x)
-z <- separate_bounds(y)
+  y <- remove_spaces(x)
+  z <- separate_bounds(y)
 
-z 
+  z
 }
-
-mat_mor_new <- fix_who_column(mat_mor$mortality.rate)
-glimpse(mat_mor_new)
