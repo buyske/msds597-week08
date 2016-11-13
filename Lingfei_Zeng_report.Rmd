@@ -1,0 +1,23 @@
+---
+title: "Lingfei_Zeng_MSDS597_Hw8"
+author: "Lingfei Zeng"
+date: "November 9, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+    
+```{R}
+source("Zeng-functions.R")
+HIV<-read_csv("./data/HIV_data.csv")
+HIV<-as.data.frame(HIV)
+HIV.fixed<-fix_who_column(HIV$`Estimated number of people (all ages) living with HIV`)[2:8,]
+    
+
+```
+
+
