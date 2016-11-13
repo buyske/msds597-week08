@@ -32,7 +32,7 @@ As a starting point, we have just the cleaned maternal mortality dataframe. (Fee
 
 ```{r maternal_mortality, echo = FALSE, message = FALSE}
 
-maternal_mortality_raw <- read_csv("data/xmart.csv")
+maternal_mortality_raw <- read_csv("https://raw.githubusercontent.com/KaiJeng/AssignmentSeven/master/data/xmart.csv")
 
 maternal_mortality <- maternal_mortality_raw
 
@@ -51,3 +51,67 @@ maternal_mortality$Year <- as.integer(str_sub(maternal_mortality$Year, 1, 4))
 head(maternal_mortality)
 ```
 
+Now let's look at cleaning another WHO data set, in particular the "Intimate partner violence prevalence Data by WHO income region." First up, lets look at the functions written to clean this data:
+
+```{r myfunctions, echo=TRUE}
+# Not sure if need to call packages but just incase
+care_package <- function(x){
+  library(stringr)
+  library(dplyr)
+  }
+
+# Modified from clean_who_number_spaces()
+clean_who_number_spaces <- 
+  function(x) {
+    str_replace_all(x, "([0-9]{1,3}) ([0-9]{3})", paste0("\\1", "", "\\2"))
+    str_replace_all(x," ","")
+  }
+
+# If I don't extract the "[" the output becomes a list. Not sure why, but doing it this way doesn't make it a list which is what I need.
+avg_get <-
+  function(x) {
+    test <- str_extract_all(x,"^[0-9]+\\.?[0-9]*\\[")
+    str_replace_all(test,"\\[","")
+  }
+
+lower_get <-
+  function(x) {
+    test <- str_extract_all(x,"\\[[0-9]+\\.?[0-9]*")
+    str_replace_all(test,"\\[","")
+  }
+  
+upper_get <-
+  function(x) {
+    test <- str_extract_all(x,"[0-9]+\\.?[0-9]*\\]$")
+    str_replace_all(test,"\\]","")
+  }
+
+# Using str_extract will cause warnings to show up. This is because when it trys to extract "NA" values, it will return a "character(0)" value. This value is then converted as.numeric which causes a warning indicating it has changed to NA. I could use supresswarnings but decided not to so the user sees everything.
+# I was trying to figure out ways to deploy checks of the input but couldn't figure out how to implement properly. However, the way the function works is that if the input is incorrect it will just output "NA"s for all observatios in the data frame which is a good indicator to the user that something is wrong with the input.
+fix_who_column <- 
+  function(x) {
+    care_package(x)
+    prep <- clean_who_number_spaces(x)
+    # Inputs could use decimals so as.numeric is required instead of as.integer
+    avg <- as.numeric(avg_get(prep))
+    lower_bound <- as.numeric(lower_get(prep))
+    upper_bound <- as.numeric(upper_get(prep))
+    data.frame(avg,lower_bound,upper_bound)
+  }
+```
+
+With that done, lets output the cleaned data:
+
+```{r violence, echo=TRUE}
+# Read and display the new data frame
+violence <- read_csv("http://apps.who.int/gho/athena/data/GHO/RHR_IPV?filter=COUNTRY:-;WHOINCOMEREGION:*&x-sideaxis=WHOINCOMEREGION;AGEGROUP&x-topaxis=GHO;SEX;YEAR&profile=crosstable&format=csv")
+names(violence) <- make.names(names(violence))
+# Not entirely sure how to create data.frame from scratch but converting from a value to data.frame works
+prevalence <- 1
+prevalence <- data.frame(prevalence)
+prevalence <- fix_who_column(violence$Intimate.partner.violence.prevalence.among.ever.partnered.women....)
+# The first two observations are NA since the data doesn't start till the third row. Remove them and reset the rownames.
+prevalence <- prevalence[-c(1,2),]
+rownames(prevalence) <- NULL
+head(prevalence)
+```
