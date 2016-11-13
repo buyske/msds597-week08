@@ -12,7 +12,6 @@ source("Cai-functions.R")
 ```
 
 
-
 ####1. We clean the WHO data by calling the functions `fix_who_column` and output a 3-column data frame that pulls out the martility rate, lower bound and upper bound as shown below.
 
 ```{r}
@@ -24,7 +23,6 @@ head(mortality_cleaned)
 ```
 
 
-
 ####2. The `water` dataset below shows the burden of disease due to inadequate hygiene in low- and middle-income countries in 2012. We clean the column `2012` which includes the total number of deaths caused by inadequate water in low- and middle-income countries in 2012. We clean this column and output a 3-column data frame by calling the function `fix_who_column`. The result is shown below.
 
 ```{r}
@@ -32,4 +30,5 @@ water <- read_csv("data/water_sanitation.csv", skip = 2)
 water_cleaned <- fix_who_column(water$`2012`)
 head(water_cleaned)
 ```
+
 
