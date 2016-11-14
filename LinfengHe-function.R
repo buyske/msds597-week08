@@ -18,7 +18,7 @@ who_pull_lower_bounds <- function(x){
   library(stringr)
   library(dplyr)
   x <- x %>%
-    str_extract(., "\\[ [0-9]+") %>%
+    str_extract(., "\\[[0-9]+") %>%
     str_replace_all(., "\\[","") %>%
     as.numeric()
   return(x)
