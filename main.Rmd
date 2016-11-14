@@ -7,7 +7,17 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
 library(tidyverse)
+library(ggthemes)
+library(choroplethr)
+library(choroplethrMaps)
+library(RColorBrewer)
+library(rvest)
+library(readxl)
+library(viridis)
+library(plotly)
 ```
 
 
@@ -49,5 +59,20 @@ maternal_mortality$upper.bound <- as.integer(maternal_mortality$upper.bound)
 
 maternal_mortality$Year <- as.integer(str_sub(maternal_mortality$Year, 1, 4))
 head(maternal_mortality)
+```
+
+```{r}
+# Q2
+
+# Reading the datasheet
+
+child_mortality<-read.csv("E:/DataScience/DataWrangling/Assignment8/data.csv",stringsAsFactors = FALSE)
+
+# Changing the name of the column and giving it a better name
+names(child_mortality)[3]<-"NewBorn_Mortality"
+
+# Calling the function from Barnwal_function.R
+source("Barnwal_function.R")
+head(fix_who_column(child_mortality$NewBorn_Mortality))
 ```
 
