@@ -1,0 +1,58 @@
+---
+title: "Report"
+author: "Varnith"
+date: "13 November 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+
+
+```{r}
+
+
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(reshape)
+library(knitr)
+
+```
+
+
+
+
+```{r}
+
+austria<-read.csv("C:/Users/Varnith/msds597-week08/data/Austria_Summary_Statistics.csv", stringsAsFactors = FALSE)
+
+colnames(austria)<-austria[1,]
+
+austria<-austria[-1,]
+
+austria<-gather(austria, "Year", "Value" , 2:15)
+
+austria_final<-cast(austria,Year~Indicator)
+
+
+
+names(austria_final)[14]<-"Neonatal_mortality_rate"
+
+
+source("E:/Rutgers/1st-Sem/Data_Wrangling_Homework/Chordia_Functions_09.R")
+
+cleaned_data<-fix_who_column(x = austria_final$Neonatal_mortality_rate,a=austria_final$Lower_Bound,b=austria_final$Upper_Bound)
+
+
+
+head(cleaned_data)
+
+
+```
+
+**I have considered the Austrian  Summary Statistics data,which contains summary statistics over the years.I had to tidy the data first to recast the indicator variables which are in rows into columns.The Variable under consideration is Neonatal-mortality-rate.I have created 3 functions, the clean-who-number-spaces is used to clean the spaces which is assigned to y,clean-who-upper-bound is to extract the upper bound values is assigned a and clean-who-lower-bound
+is assigned b.**
+
