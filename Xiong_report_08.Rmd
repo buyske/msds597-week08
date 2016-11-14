@@ -1,0 +1,31 @@
+---
+title: "Xiong_week_08"
+author: "Xing Xiong"
+date: "2016Äê11ÔÂ14ÈÕ"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(stringr)
+data1 <- read_csv("MDG_0000000007,WHOSIS_000003.csv")
+colnames(data1) <- c("country","year","neon mor","under-five mor")
+fix_who_column <- function(x) {
+    clear_space <- function(x) str_replace_all(x ," ","")
+    find_lower_bound <- function(x) str_extract(clear_space(x) , "\\[[0-9]+.[0-9]+")
+    find_upper_bound <- function(x) str_extract(clear_space(x) , "[0-9]+.[0-9]+\\]")
+    find_value <- function(x) str_extract(clear_space(x) , "[0-9]+.[0-9]+")
+    clear_bracket1 <- function(x) {str_replace_all(x , "\\[" , "")}
+    clear_bracket2 <- function(x) {str_replace_all(x , "\\]" , "")}
+    data1$neonlower <- clear_bracket1(find_lower_bound(x$`neon mor`))
+    data1$neonupper <- clear_bracket2(find_upper_bound(x$`neon mor`))
+    data1$neonvalue <- find_value(x$`neon mor`)
+    data1$underfivelower <- clear_bracket1(find_lower_bound(x$ `under-five mor`))
+    data1$underfiveupper <- clear_bracket2(find_upper_bound(x$ `under-five mor`))
+    data1$underfivevalue <- find_value(x$ `under-five mor`)
+    data1
+}
+data1 <- fix_who_column(data1)
+data1
+```
+
