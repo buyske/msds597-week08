@@ -1,0 +1,22 @@
+---
+title: "Linfeng_He_report"
+author: "Linfeng He"
+date: "11/14/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo = TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(stringr)
+source("LinfengHe-function.R")
+```
+
+As well explained by the title that this dataset presents the number of deaths due to HIV:AIDS estimates by WHO region
+
+```{r}
+number_of_death <- read_csv("data/Number of deaths due to HIV:AIDS Estimates by WHO region.csv", skip = 1)
+colnames(number_of_death)[2] <- "Number of deaths due to HIV/AIDS"
+
+fix_who_column(number_of_death$`Number of deaths due to HIV/AIDS`)
+```
