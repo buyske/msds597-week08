@@ -1,0 +1,45 @@
+---
+title: 'MSDS 597 Assignment #8'
+author: "Zach Wilson"
+date: "November 11, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+As is always true with these assignments, the first step is to load the libraries that will be necessary when running this file.  Onve that is done, the child mortality csv file is loaded up and the columns renamed to a bit more concise column names.
+
+```{r, echo = TRUE, include = TRUE} 
+# load necessary libraries
+library(tidyverse)
+library(stringr)
+
+# load the WHO data processing functions
+source("wilson-functions.R")
+
+# load the WHO child mortality data
+cm <- read_csv("../data/child_mortality.csv")
+names(cm) <- c("region", "year", "infant_mortality_rate", "neonatal_mortality_rate", "under_five_mortality_rate")
+```
+
+Next, the fix_who_column function is called twice, once for the infant_mortality_rate column and once for the under_five_mortality_rate column.  Each of these are broken into three columns: the actual value, a lower bound, and a upper bound.  Those three columns are then appended to the childhood mortality data frame after deleting the column that the data was broken out from.
+
+```{r, echo = TRUE, include = TRUE} 
+# breakout the numbers in the infant mortality rate column into to three seperate
+# columns - lower bound, upper bound, and actual
+im <- fix_who_column(cm$infant_mortality_rate)
+cm$infant_mortality_rate <- NULL
+cm$infant_mortality_rate <- im$actual
+cm$im_lower_bound <- im$lower_bound
+cm$im_upper_bound <- im$upper_bound
+
+# breakout the numbers in the under five mortality rate column into to three seperate
+# columns - lower bound, upper bound, and actual
+ufm <- fix_who_column(cm$under_five_mortality_rate)
+cm$under_five_mortality_rate <- NULL
+cm$under_five_mortality_rate <- ufm$actual
+cm$ufm_lower_bound <- ufm$lower_bound
+cm$ufm_upper_bound <- ufm$upper_bound
+```
